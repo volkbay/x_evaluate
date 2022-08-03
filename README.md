@@ -8,7 +8,7 @@ If you use this code in an academic context, please cite the following work:
 
 [Florian Mahlknecht](https://florian.world), [Daniel Gehrig](https://danielgehrig18.github.io/), Jeremy Nash, 
 Friedrich M. 
-Rockenbauer, Benjamin Morrell, Jeff Delaune, [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html), "Video to Events: Recycling Video Datasets for Event Cameras", IEEE Robotics and Automation Letters (RA-L), 2022
+Rockenbauer, Benjamin Morrell, Jeff Delaune, [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html), "Exploring Event Camera-based Odometry for Planetary Robots", IEEE Robotics and Automation Letters (RA-L), 2022
 ```bibtex
 @article{Mahlknecht22RAL,
   title={Exploring Event Camera-based Odometry for Planetary Robots},
