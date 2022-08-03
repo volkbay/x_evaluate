@@ -1,11 +1,29 @@
-# x_evaluate
+# Exploring Event Camera-based Odometry for Planetary Robots
+<p align="center">
+    <img src="https://rpg.ifi.uzh.ch/img/papers/arxiv22_Mahlknecht.png" alt="EKLT-VIO" width="600"/>
+</p>
+This repository contains code that implements the event-based VIO algorithm described in Mahlknecht et al. RAL'22. The paper can be found [here](http://rpg.ifi.uzh.ch/docs/RAL22_Mahlknecht.pdf), and datasets can be found [here](https://uzh-rpg.github.io/eklt-vio/).
+If you use this code in an academic context, please cite the following work:
+[Florian Mahlknecht](https://florian.world), [Daniel Gehrig](https://danielgehrig18.github.io/), Jeremy Nash, 
+Friedrich M. 
+Rockenbauer, Benjamin Morrell, Jeff Delaune, [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html), "Video to Events: Recycling Video Datasets for Event Cameras", IEEE Robotics and Automation Letters (RA-L), 2022
+```bibtex
+@article{Mahlknecht22RAL,
+  title={Exploring Event Camera-based Odometry for Planetary Robots},
+  author={Mahlknecht, Florian and Gehrig, Daniel and Nash, Jeremy and Rockenbauer, Friedrich M. and Morrell, Benjamin and Delaune, Jeff and Scaramuzza, Davide},
+  journal={IEEE Robotics and Automation Letters (RA-L)},
+  year={2022}
+}
+```
+
+## x_evaluate
 
 Performance evaluation for (range-) visual-inertial odometry xVIO framework.
 
 Provides an extensive toolset to evaluate frontend and backend accuracy (i.e. pose and feature tracking) as well as 
 computational efficiency, such as realtime factor, CPU and memory usage.
 
-## Dependencies
+### Dependencies
 
 The library has been tested only on Ubuntu 20.04 with Ros Noetic. Although no roscore is needed, feature tracking 
 evaluation requires Python3 rosbag reader, therefore lifting the requirements to Ros Noetic.
@@ -31,7 +49,7 @@ pip install -r requirements.txt
 pip install . # Optionally install the x_evaluate in the python dist-packages
 ```
 
-## Basic architecture
+### Basic architecture
 
 The library consists of one C++ file which directly calls X library callbacks such as `processIMU()` from the data
 read from a rosbag. In this way a runtime-independent evaluation can be performed. Results are then dumped to CSV files 
@@ -40,7 +58,7 @@ and analyzed in Python, with the main module `x_evaluate`.
 The python evaluation runs additionally dump all the main results to a pickle file, such that different runs can be 
 easily compared and reproduced.
 
-## Usage
+### Usage
 
 An evaluation run is performed by `evaluate.py`. A configuration file e.g. `evaluate.yaml` defines which datasets are
 processed and based on which base parameter files, e.g. `params_rpg_davis.yaml`. Parameters can be overwritten for a  
