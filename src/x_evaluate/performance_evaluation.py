@@ -161,24 +161,27 @@ def plot_realtime_factor(pc: PlotContext, evaluations: Collection[EvaluationData
                          title=None):
     ax = pc.get_axis()
     max_length = 0
+    t_max = -1
 
     for i, d in enumerate(evaluations):
         length = len(d.performance_data.rt_factors)
         max_length = max(length, max_length)
         t_targets = np.arange(0.0, length) * RT_FACTOR_RESOLUTION
+        t_max = max(t_max, np.max(t_targets))
         label = d.name
         if labels is not None:
             label = labels[i]
             # this causes issues, quick fix:
             if label.startswith('_'):
                 label = label[1:]
-        ax.plot(t_targets, d.performance_data.rt_factors, label=label, color=DEFAULT_COLORS[i+1])
+        ax.plot(t_targets, d.performance_data.rt_factors, label=label, color=DEFAULT_COLORS[i])
 
     t_targets = np.arange(0.0, max_length) * RT_FACTOR_RESOLUTION
     ax.plot(t_targets, np.ones_like(t_targets), label="boundary", linestyle="--", color="black")
     ax.legend()
     ax.set_ylabel("Realtime factor")
-    ax.set_xlabel("t [s]")
+    ax.set_xlabel("Time [s]")
+    ax.set_xlim(0, t_max)
     if title:
         ax.set_title(title)
     else:

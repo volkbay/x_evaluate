@@ -550,6 +550,8 @@ def plot_moving_boxplot_in_time_from_stats(pc: PlotContext, t, stats, title=None
 
 
 def plot_evo_trajectory_with_euler_angles(plot_context, trajectory, label, ref_trajectory=None):
+    t0 = trajectory.timestamps[0]
+    trajectory.timestamps = trajectory.timestamps - t0
     traj_by_label = {
         str(label): trajectory
     }
@@ -561,6 +563,7 @@ def plot_evo_trajectory_with_euler_angles(plot_context, trajectory, label, ref_t
     # plot.trajectories(self._pc.figure, traj_by_label, plot.PlotMode.xz, subplot_arg=122)
 
     if ref_trajectory is not None:
+        ref_trajectory.timestamps = ref_trajectory.timestamps - t0
         rotations_ref = R.from_quat(ref_trajectory.orientations_quat_wxyz[:, [1, 2, 3, 0]])
         euler_angles_ref = np.rad2deg(rotations_ref.as_euler("ZYX")).T
         time_series_plot_with_ref(plot_context, trajectory.timestamps, trajectory.positions_xyz.T,

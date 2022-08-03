@@ -66,7 +66,7 @@ class QualitativeEvaluationRun:
 
         # print("UEHILA")
 
-        if np.all(self.realtime['ts_real'] == 0):
+        if self.realtime is not None and np.all(self.realtime['ts_real'] == 0):
             # HACKY fix of missing realtime timestamp (from missing easyprofiler library)
             ts_lowest = self.features['ts'].min()
             ts_highest = self.features['ts'].max()
@@ -87,7 +87,7 @@ def main():
     output_folder = args.output_folder
     if output_folder is None:
         output_folder = os.path.join(args.input_folder, "results")
-        print(F"Using 'output_folder' as output_folder")
+        print(F"Using '{output_folder}' as output_folder")
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -120,7 +120,7 @@ def main():
             if dataset_dir not in data_dict.keys():
                 data_dict[dataset_dir] = dict()
             data_dict[dataset_dir][directory] = QualitativeEvaluationRun(dataset_dir, directory, traj_est,
-                                                              df_imu_bias, df_features, df_realtime)
+                                                                         df_imu_bias, df_features, df_realtime)
 
     ####################################################################################################################
     ################################################### PAPER PLOTS ####################################################
@@ -128,34 +128,40 @@ def main():
 
     try:
         klt_vio_run: QualitativeEvaluationRun = data_dict['001_wells_test_5']['000-xvio-framebased']
-        eklt_vio_run: QualitativeEvaluationRun = data_dict['001_wells_test_5']['001-eklt-baseline']
+        eklt_vio_run: QualitativeEvaluationRun = data_dict['001_wells_test_5']['001-eklt-baseline-old']
 
         klt_vio_run.eval_run_name = "KLT-VIO"
         eklt_vio_run.eval_run_name = "EKLT-VIO"
         klt_vio_run.dataset_name = "Wells Cave Exit"
         eklt_vio_run.dataset_name = "Wells Cave Exit"
 
-        plot_paper_comparison_plots_wells([klt_vio_run, eklt_vio_run], output_folder)
+        # read vins mono trajectory
+        df_poses = pd.read_csv("/home/flo/projects/nasa-eve/experiments/wells_cave_tuning/additional_baselines"
+                               "/openvins_wells_9_traj_est.csv")
+        traj_est, _ = convert_to_evo_trajectory(df_poses, prefix="estimated_")
+        vins_mono_run = QualitativeEvaluationRun("Wells Cave Exit", "Vins Mono", traj_est, klt_vio_run.realtime,
+                                                 klt_vio_run.features, klt_vio_run.realtime)
+
+        plot_paper_comparison_plots_wells([klt_vio_run, eklt_vio_run, vins_mono_run], output_folder)
 
         return
     except KeyError:
-        print("Tried doing paper plots, but didn't get the right keys")
+        print("Tried doing Wells paper plots, but didn't get the right keys")
 
     try:
-        # klt_vio_run: QualitativeEvaluationRun = data_dict['001_mars_yard']['009-p-33']
+        klt_vio_run: QualitativeEvaluationRun = data_dict['001_mars_yard']['000-xvio']
         eklt_vio_run: QualitativeEvaluationRun = data_dict['001_mars_yard']['009-p-33']
 
-        # klt_vio_run.eval_run_name = "KLT-VIO"
+        klt_vio_run.eval_run_name = "KLT-VIO"
         eklt_vio_run.eval_run_name = "EKLT-VIO"
-        # klt_vio_run.dataset_name = "Mars Yard"
+        klt_vio_run.dataset_name = "Mars Yard"
         eklt_vio_run.dataset_name = "Mars Yard"
 
-        # plot_paper_comparison_plots_wells([klt_vio_run, eklt_vio_run], output_folder)
-        plot_paper_comparison_mars_yard([eklt_vio_run], output_folder)
+        plot_paper_comparison_mars_yard([klt_vio_run, eklt_vio_run], output_folder)
 
         return
     except KeyError:
-        print("Tried doing paper plots, but didn't get the right keys")
+        print("Tried doing Mars Yard paper plots, but didn't get the right keys")
 
     ####################################################################################################################
     ################################################# OVERVIEW PLOTS  ##################################################
@@ -177,17 +183,26 @@ def main():
 
 def plot_paper_comparison_plots_wells(eval_runs: List[QualitativeEvaluationRun], output_folder):
     # slice to desired region
-    lim_t = [0, 25]
+    lim_t = [13.6, 25]
 
     x_evaluate.plots.use_paper_style_plots = True
     dataset, distances_from_origin, distances_from_origin_plus_one, num_slam_features,\
         p_x, p_y, p_z, distances, distances_plus_one, run_names, t, t_f = extract_and_slice_data(eval_runs, lim_t)
 
-    lim_y = [-1, 5]
-    lim_z = [-1, 5]
+    # align from start
+    p_x[0] = p_x[0] - p_x[0][0] + p_x[1][0]
+    p_y[0] = p_y[0] - p_y[0][0] + p_y[1][0]
+    p_z[0] = p_z[0] - p_z[0][0] + p_z[1][0]
+
+    p_x[2] = p_x[2] - p_x[2][0] + p_x[1][0]
+    p_y[2] = p_y[2] - p_y[2][0] + p_y[1][0]
+    p_z[2] = p_z[2] - p_z[2][0] + p_z[1][0]
+
+    lim_y = [-0.5, 4]
+    lim_z = [-0.5, 4]
 
     with PlotContext(os.path.join(output_folder, F"{name_to_identifier(dataset)}_yz_plot")) as pc:
-        time_series_plot(pc, p_y, p_z, run_names, xlabel="y [m]", ylabel="z [m]", xlim=lim_y, ylim=lim_z,
+        time_series_plot(pc, p_y, p_z, run_names, xlabel="Y [m]", ylabel="Z [m]", xlim=lim_y, ylim=lim_z,
                          axis_equal=True)
 
     with PlotContext(os.path.join(output_folder, F"{name_to_identifier(dataset)}_distance")) as pc:
@@ -220,18 +235,26 @@ def plot_paper_comparison_plots_wells(eval_runs: List[QualitativeEvaluationRun],
 
 def plot_paper_comparison_mars_yard(eval_runs: List[QualitativeEvaluationRun], output_folder):
     # slice to desired region
-    lim_t = [0, 20]
+    lim_t = [10, 20]
 
     x_evaluate.plots.use_paper_style_plots = True
     dataset, distances_from_origin, distances_from_origin_plus_one, num_slam_features,\
         p_x, p_y, p_z, distances, distances_plus_one, run_names, t, t_f = extract_and_slice_data(eval_runs, lim_t)
 
-    lim_x = [-5, 5]
-    lim_y = [-5, 5]
+    # align from start
+    p_x[1] = p_x[1] - p_x[1][0] + p_x[0][0]
+    p_y[1] = p_y[1] - p_y[1][0] + p_y[0][0]
+
+    lim_x = [-4, 2]
+    lim_y = [-3, 3]
 
     with PlotContext(os.path.join(output_folder, F"{name_to_identifier(dataset)}_xy_plot")) as pc:
-        time_series_plot(pc, p_x, p_y, run_names, xlabel="x [m]", ylabel="y [m]", xlim=lim_x, ylim=lim_y,
+        time_series_plot(pc, p_x, p_y, run_names, xlabel="X [m]", ylabel="Y [m]", xlim=lim_x, ylim=lim_y,
                          axis_equal=True)
+
+    with PlotContext(os.path.join(output_folder, F"{name_to_identifier(dataset)}_distance")) as pc:
+        time_series_plot(pc, t, distances_from_origin, run_names, ylabel="Distance from origin [m]", ylim=[0, 5],
+                         xlim=lim_t)
 
 
 def extract_and_slice_data(eval_runs, lim_t):

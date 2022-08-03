@@ -190,7 +190,7 @@ def main():
         ax_top = pc.get_axis()
         ax_bottom = pc.get_axis(sharex=ax_top)
 
-        ax_top.set_ylabel("EKF updates / s")
+        ax_top.set_ylabel("EKF Updates / s")
         ax_bottom.set_ylabel("APE [m]")
 
         t_max = 35
@@ -215,7 +215,7 @@ def main():
 
             ax_bottom.plot(t_error, error, label=labels[j], color=DEFAULT_COLORS[j+3])
 
-        ax_bottom.set_xlabel("t [s]")
+        ax_bottom.set_xlabel("Time [s]")
         ax_top.legend()
         ax_top.label_outer()
         ax_bottom.label_outer()

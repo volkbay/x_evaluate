@@ -94,7 +94,7 @@ datasets:
    rosbag: ${XVIO_DATASET_DIR}/wells_cave/wells_test5.bag
    pose_topic:
    events_topic: /dvs/events
-   image_topic: /dvs/image_reconstructions
+   image_topic: /dvs/image_raw
    imu_topic: /dvs/imu
    params: ${X_EVALUATE_SRC_ROOT}/params_wells.yaml
    to: 1624056450.96
@@ -113,7 +113,7 @@ datasets:
    rosbag: ${XVIO_DATASET_DIR}/wells_cave/wells_test5_reentrance.bag
    pose_topic:
    events_topic: /dvs/events
-   image_topic: /dvs/image_reconstructions
+   image_topic: /dvs/image_raw
    imu_topic: /dvs/imu
    params: ${X_EVALUATE_SRC_ROOT}/params_wells.yaml
    override_params:
@@ -293,7 +293,7 @@ datasets:
    rosbag: ${XVIO_DATASET_DIR}/wells_cave/wells_test15.bag
    pose_topic:
    events_topic: /dvs/events
-   image_topic: /dvs/image_reconstructions
+   image_topic: /dvs/image_raw
    imu_topic: /dvs/imu
    params: ${X_EVALUATE_SRC_ROOT}/params_wells.yaml
    override_params:
