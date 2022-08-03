@@ -2,8 +2,10 @@
 <p align="center">
     <img src="https://rpg.ifi.uzh.ch/img/papers/arxiv22_Mahlknecht.png" alt="EKLT-VIO" width="600"/>
 </p>
+
 This repository contains code that implements the event-based VIO algorithm described in Mahlknecht et al. RAL'22. The paper can be found [here](http://rpg.ifi.uzh.ch/docs/RAL22_Mahlknecht.pdf), and datasets can be found [here](https://uzh-rpg.github.io/eklt-vio/).
 If you use this code in an academic context, please cite the following work:
+
 [Florian Mahlknecht](https://florian.world), [Daniel Gehrig](https://danielgehrig18.github.io/), Jeremy Nash, 
 Friedrich M. 
 Rockenbauer, Benjamin Morrell, Jeff Delaune, [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html), "Video to Events: Recycling Video Datasets for Event Cameras", IEEE Robotics and Automation Letters (RA-L), 2022
