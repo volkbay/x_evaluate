@@ -7,3 +7,27 @@ repositories:
     type: git
     url: git@github.com:ethz-asl/gflags_catkin.git
     version: master
+  catkin_simple:
+    type: git
+    url: git@github.com:catkin/catkin_simple
+    version: master
+  x_events:
+    type: git
+    url: git@github.com:jpl-x/x_events
+    version: events
+  glog_catkin:
+    type: git
+    url: git@github.com:ethz-asl/glog_catkin
+    version: master
+  x_easy_profiler_catkin:
+    type: git
+    url: git@github.com:florian-world/x_easy_profiler_catkin
+    version: master
+  ceres_catkin:
+    type: git
+    url: git@github.com:ethz-asl/ceres_catkin
+    version: master
+  eigen_catkin:
+    type: git
+    url: git@github.com:ethz-asl/eigen_catkin
+    version: master
