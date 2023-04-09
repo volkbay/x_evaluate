@@ -448,7 +448,10 @@ def boxplot_compare(ax: plt.Axes, x_tick_labels, data, legend_labels, colors=Non
     ax.set_xticks(np.arange(n_xlabel))
     ax.set_xticklabels(x_tick_labels)
     ax.set_xlim(-.6, n_xlabel-.4)
-    ax.xaxis.grid(b=None)
+    try: # @volkbay: Matplotlib > 3.5 has changed attribute 'b' to 'visible' 
+        ax.xaxis.grid(b=None)
+    except ValueError:
+        ax.xaxis.grid(visible=None)
     if legend:
         # ax.legend(leg_handles, leg_labels, bbox_to_anchor=(
             # 1.05, 1), loc=2, borderaxespad=0.)

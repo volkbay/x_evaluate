@@ -13,13 +13,13 @@ repositories:
     version: master
   x_events:
     type: git
-    url: git@github.com:jpl-x/x_events
+    url: git@github.com:volkbay/x_events #TODO: @volkbay: Change volkbay to jpl-x if PR accepted
     version: events
   glog_catkin:
     type: git
     url: git@github.com:ethz-asl/glog_catkin
     version: master
-  x_easy_profiler_catkin:
+  easy_profiler_catkin:
     type: git
     url: git@github.com:florian-world/x_easy_profiler_catkin
     version: master
